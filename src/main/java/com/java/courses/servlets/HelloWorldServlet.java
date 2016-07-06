@@ -3,6 +3,7 @@ package com.java.courses.servlets;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -20,13 +21,13 @@ public class HelloWorldServlet extends HttpServlet {
         writer.println("</head>");
         writer.println("<body>");
         writer.println("<p>Hello World1<p/>");
-/*
+
         try {
-            getStudentsFromJDBC(writer, connection);
+            getStudentsFromJDBC(writer);
         } catch (SQLException e) {
             writer.println("<p>"+e.getMessage()+"</p>");
 
-        } */
+        }
 /*
         String str="";
         try {
@@ -43,24 +44,24 @@ public class HelloWorldServlet extends HttpServlet {
     }
 
 
-    public void getStudentsFromJDBC() throws SQLException, IOException {
+    public void getStudentsFromJDBC(PrintWriter writer) throws SQLException, IOException {
         Properties properties = new Properties();
-        InputStream stream = getClass().getResourceAsStream("db.properties");
+        InputStream stream =new BufferedInputStream(this.getClass().getClassLoader().getResourceAsStream("db.properties"));
         properties.load(stream);
         Connection connection = DriverManager.getConnection(properties.getProperty("url"),
                 properties.getProperty("username"),
                 properties.getProperty("password"));
-        //writer.println("Test1");
+        writer.println("Test1");
         String sql = "select * from students";
         Statement statement = connection.createStatement();
         statement.execute(sql);
         ResultSet resultSet = statement.getResultSet();
         String str = "";
         while (resultSet.next()) {
-            str += resultSet.getString("name") + ", ";
-            str += resultSet.getString("surename") + ", ";
-            //writer.println("<p>" + resultSet.getString("name") + "</p>");
-            //writer.println("<p>" + resultSet.getString("surename") + "</p>");
+            //str += resultSet.getString("name") + ", ";
+            //str += resultSet.getString("surename") + ", ";
+            writer.println("<p>" + resultSet.getString("name") + "</p>");
+            writer.println("<p>" + resultSet.getString("surename") + "</p>");
             System.out.println(str);
         }
     }
